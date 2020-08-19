@@ -119,3 +119,69 @@ This program prints
 
 In Java, you can define multiple
 methods with the same name, provided the argument lists differ from each other.
+
+```
+class Circle {
+	// other members
+	public void fillColor(int red, int green, int blue) {
+		/* color the circle using RGB color values – actual code elided */
+	}
+
+	public void fillColor(float hue, float saturation, float brightness) {
+		/* color the circle using HSB values – actual code elided */
+	}
+}
+```
+
+## Constructor Overloading
+
+A default constructor is useful for creating objects with a default initialization value. When you want to
+initialize the objects with different values in different instantiations, you can pass them as the arguments to
+constructors. And yes, you can have multiple constructors in a class, which is constructor overloading. In a
+class, the default constructor can initialize the object with default initial values, while another constructor
+can accept arguments that need to be used for object instantiation.
+
+```
+public class Circle {
+	private int xPos;
+	private int yPos;
+	private int radius;
+
+// three overloaded constructors for Circle
+	public Circle(int x, int y, int r) {
+		xPos = x;
+		yPos = y;
+		radius = r;
+	}
+
+	public Circle(int x, int y) {
+		xPos = x;
+		yPos = y;
+		radius = 10; // default radius
+	}
+
+	public Circle() {
+		xPos = 20; // assume some default values for xPos and yPos
+		yPos = 20;
+		radius = 10; // default radius
+	}
+
+	public String toString() {
+		return "center = (" + xPos + "," + yPos + ") and radius = " + radius;
+	}
+
+	public static void main(String[] s) {
+		System.out.println(new Circle());
+		System.out.println(new Circle(50, 100));
+		System.out.println(new Circle(25, 50, 5));
+	}
+}
+```
+
+This program prints
+
+center = (20,20) and radius = 10
+
+center = (50,100) and radius = 10
+
+center = (25,50) and radius = 5
