@@ -33,6 +33,7 @@ local.properties
 .settings/
 .loadpth
 .recommenders
+build/
 
 # Locally stored "Eclipse launch configurations"
 *.launch
