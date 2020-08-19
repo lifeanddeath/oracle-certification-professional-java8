@@ -185,3 +185,106 @@ center = (20,20) and radius = 10
 center = (50,100) and radius = 10
 
 center = (25,50) and radius = 5
+
+## Overload Resolution
+
+```
+class Overloaded {
+	public static void aMethod(int val) {
+		System.out.println("int");
+	}
+
+	public static void aMethod(short val) {
+		System.out.println("short");
+	}
+
+	public static void aMethod(Object val) {
+		System.out.println("object");
+	}
+
+	public static void aMethod(String val) {
+		System.out.println("String");
+	}
+
+	public static void main(String[] args) {
+		byte b = 9;
+		aMethod(b); // first call
+		aMethod(9); // second call
+		Integer i = 9;
+		aMethod(i); // third call
+		aMethod("9"); // fourth call
+	}
+}
+```
+
+It prints
+
+short
+
+int
+
+object
+
+String
+
+Here is how the compiler resolved these calls:
+
+1. In the first method call, the statement is aMethod(b) where the variable b is of
+type byte. There is no aMethod definition that takes byte as an argument. The
+closest type (in size) is short type and not int, so the compiler resolves the call
+aMethod(b) to aMethod(short val) definition.
+2. In the second method call, the statement is aMethod(9). The constant value 9 is
+of type int. The closest match is aMethod(int), so the compiler resolves the call
+aMethod(9) to aMethod(int val) definition.
+3. The third method call is aMethod(i), where the variable i is of type Integer.
+There is no aMethod definition that takes Integer as an argument. The closest
+match is aMethod(Object val), so it is called. Why not aMethod(int val)? For
+finding the closest match, the compiler allows implicit upcasts, not downcasts, so
+aMethod(int val) is not considered.
+4. The last method call is aMethod("9"). The argument is a String type. Since there
+is an exact match, aMethod(String val) is called.
+
+```
+class OverloadingError {
+	public static void aMethod(byte val) {
+		System.out.println("byte");
+	}
+
+	public static void aMethod(short val) {
+		System.out.println("short");
+	}
+
+	public static void main(String[] args) {
+		aMethod(9);
+	}
+}
+```
+
+This would give compiler error, as compiler would do upcasting but the downcasting is not possible!
+
+```
+class AmbiguousOverload {
+	public static void aMethod(long val1, int val2) {
+		System.out.println("long, int");
+	}
+
+	public static void aMethod(int val1, long val2) {
+		System.out.println("int, long");
+	}
+
+	public static void main(String[] args) {
+		aMethod(9, 10);
+	}
+}
+```
+
+Above shown code would also fail and not compile, as int value would be upcasted for long as well, so it is sort of like compiler confusion for the types of int and long!
+
+###Points to remember 
+* Overload resolution takes place entirely at compile time
+* You cannot overload methods with the methods differing in return types alone
+* You cannot overload methods with the methods differing in exception specifications
+* For overload resolution to succeed, you need to define methods such that the
+compiler finds one exact match. If the compiler finds no matches for your call or
+if the matching is ambiguous, the overload resolution fails and the compiler issues
+an error.
